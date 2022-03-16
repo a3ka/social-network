@@ -2,7 +2,7 @@ import React from 'react';
 
 type PostPropsType ={
     message: string
-    likesCount: string
+    likesCount: number
 }
 
 export const Post = (props: PostPropsType) => {
