@@ -1,3 +1,7 @@
+import actions from "redux-form/lib/actions";
+import profileReducer from "./profile-reducer";
+import dialogsReducer from "./dialogs-reducer";
+import sidebarReducer from "./sidebar-reducer";
 
 let rerenderEntireTree = (state: StateType) => {
 }
@@ -26,6 +30,7 @@ export type ProfilePageType = {
 export type DialogsPageType = {
     dialogs: Array<DialogsType>
     messages: Array<MessagesType>
+    newMessageText: any
 }
 
 type sidebarType = {
@@ -36,6 +41,8 @@ export type StateType = {
     profilePage: ProfilePageType
     dialogsPage: DialogsPageType
     sidebar?: sidebarType
+    dispatch?: (state:any) => void
+    _callSubscriber: ()=> void
 }
 
 export const state: StateType = {
@@ -62,9 +69,21 @@ export const state: StateType = {
             {id: 3, message: 'Yo'},
             {id: 4, message: 'LOL'},
             {id: 5, message: 'LOL2'},
-        ]
+        ],
+        newMessageText: ''
     },
-    sidebar: { any: []}
+    sidebar: { any: []},
+    _callSubscriber() {
+        console.log('State changed')
+    }
+    ,
+    dispatch (action) {
+        this.profilePage = profileReducer(this.profilePage, action)
+        this.dialogsPage = dialogsReducer(this.dialogsPage, action)
+        this.sidebar = sidebarReducer(this.sidebar, action)
+
+        this._callSubscriber()
+    }
 }
 
 export const addPost = () => {
@@ -82,6 +101,23 @@ export const updateNewPostText = (newText: string) => {
     rerenderEntireTree(state);
 }
 
-export const subsribe = (observer: ()=>void) => {
+export const addDialogMessage = () => {
+    let newMessage =  {
+        id: 6,
+        message: state.dialogsPage.newMessageText
+    }
+    state.dialogsPage.messages.push(newMessage)
+    rerenderEntireTree(state);
+}
+
+export const updateNewDialogMessageText = (newMessage: string) => {
+    state.dialogsPage.newMessageText = newMessage
+    rerenderEntireTree(state);
+}
+
+
+
+export const subsсribe = (observer: ()=>void) => {
     rerenderEntireTree = observer
 }
+

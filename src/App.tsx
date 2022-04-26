@@ -14,6 +14,8 @@ type AppPropsType = {
     state: StateType,
     addPost: ()=> void
     updateNewPostText: (newText: string) => void
+    addDialogMessage: () => void
+    updateNewDialogMessageText: (newMessage: string) => void
 }
 
 function App(props: AppPropsType) {
@@ -28,7 +30,13 @@ function App(props: AppPropsType) {
                   <Route
                       path='/dialogs'
                       render={ () => <Dialogs dialogs={props.state.dialogsPage.dialogs}
-                                              messages={props.state.dialogsPage.messages}/>} />
+                                              newMessageText={props.state.dialogsPage.newMessageText}
+                                              messages={props.state.dialogsPage.messages}
+                                              addDialogMessage={props.addDialogMessage}
+                                              updateNewDialogMessageText={props.updateNewDialogMessageText}
+
+                      />}
+                  />
                   <Route path='/profile'
                          render={ () => <Profile
                              profilePage={props.state.profilePage}
