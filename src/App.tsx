@@ -1,56 +1,42 @@
 import React from 'react';
 import './App.css';
-import {Dialogs} from "./Components/Dialogs/Dialogs";
-import {Header} from "./Components/Header/Header";
-import {Navbar} from "./Components/Navbar/Navbar";
-import {Profile} from "./Components/Profile/Profile";
-import {BrowserRouter, Route} from "react-router-dom";
-import {News} from "./Components/News/News";
-import {Music} from "./Components/Music/Music";
-import {Settings} from "./Components/Settings/Settings";
-import {StateType} from "./redux/state";
+import {Header} from "./components/Header/Header";
+import {Navbar} from "./components/Navbar/Navbar";
+import {Profile} from "./components/Profile/Profile";
+import {Dialogs} from "./components/Dialogs/Dialogs";
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {ReduxStoreType} from "./redux/redux-store";
 
-type AppPropsType = {
-    state: StateType,
-    addPost: ()=> void
-    updateNewPostText: (newText: string) => void
-    addDialogMessage: () => void
-    updateNewDialogMessageText: (newMessage: string) => void
+export type AppPropsType = {
+    store: ReduxStoreType
 }
 
-function App(props: AppPropsType) {
-  return (
-      <BrowserRouter>
-          <div className="app-wrapper">
-              <Header />
-              <Navbar />
-              <div className="app-wrapper-content">
-                  {/*<Route path='/dialogs' component={Dialogs} />*/}
-                  {/*<Route path='/profile' component={Profile} />*/}
-                  <Route
-                      path='/dialogs'
-                      render={ () => <Dialogs dialogs={props.state.dialogsPage.dialogs}
-                                              newMessageText={props.state.dialogsPage.newMessageText}
-                                              messages={props.state.dialogsPage.messages}
-                                              addDialogMessage={props.addDialogMessage}
-                                              updateNewDialogMessageText={props.updateNewDialogMessageText}
+const App: React.FC<AppPropsType> = (props) => {
+    const state = props.store.getState();
+    return (
+        <BrowserRouter>
+            <div className="app-wrapper">
+                <Header/>
+                <Navbar/>
+                <div className='app-wrapper-content'>
+                    <Routes>
+                        <Route path="dialogs/*"
+                               element={<Dialogs dialogs={state.dialogsReducer.dialogs}
+                                                 messages={state.dialogsReducer.messages}
+                                                 dispatch={props.store.dispatch.bind(props.store)}
+                                                 newMessageText={state.dialogsReducer.newMessageText}
+                               />}/>
+                        <Route path="profile" element={<Profile posts={state.profileReducer.posts}
+                                                                dispatch={props.store.dispatch.bind(props.store)}
+                                                                newPostText={state.profileReducer.newPostText}
 
-                      />}
-                  />
-                  <Route path='/profile'
-                         render={ () => <Profile
-                             profilePage={props.state.profilePage}
-                             newPostText={props.state.profilePage.newPostText}
-                             addPost={props.addPost}
-                             updateNewPostText={props.updateNewPostText}
-                         />} />
-                  <Route path='/news' component={News} />
-                  <Route path='/music' component={Music} />
-                  <Route path='/settings' component={Settings} />
-              </div>
-          </div>
-      </BrowserRouter>
-  );
+                        />}/>
+                        <Route path="news" element={'News'}/>
+                    </Routes>
+                </div>
+            </div>
+        </BrowserRouter>
+    );
 }
 
 export default App;

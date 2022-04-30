@@ -8,8 +8,8 @@ type PostType = {
     likesCount: number
 }
 export type ProfilePageType = {
-    newPostText: string
     posts: Array<PostType>
+    newPostText: string
 }
 
 type MessageType = {
@@ -23,9 +23,10 @@ type DialogType = {
 }
 
 export type DialogsPageType = {
-    newMessageText: string
     messages: Array<MessageType>
     dialogs: Array<DialogType>
+    newMessageText: string
+
 }
 
 export type StatePropsType = {
@@ -54,16 +55,15 @@ export type StoreType = {
 export const store: StoreType = {
     _state: {
         profilePage: {
-            newPostText: '',
             posts: [
                 {id: 1, message: 'Hello world', likesCount: 10},
                 {id: 2, message: 'I like It-incubator', likesCount: 56},
                 {id: 3, message: 'I learn React', likesCount: 35},
                 {id: 4, message: 'I learn CSS', likesCount: 55},
-            ]
+            ],
+            newPostText: ''
         },
         dialogsPage: {
-            newMessageText: '',
             messages: [
                 {id: 1, message: 'Hi'},
                 {id: 2, message: 'How is your it-incubator?'},
@@ -76,7 +76,8 @@ export const store: StoreType = {
                 {id: 4, name: 'Alex'},
                 {id: 5, name: 'Sergei'},
                 {id: 6, name: 'Eva1'},
-            ]
+            ],
+            newMessageText: ''
         }
     },
 
