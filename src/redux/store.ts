@@ -7,9 +7,9 @@ type PostType = {
     message: string
     likesCount: number
 }
-export type ProfilePageType = {
-    posts: Array<PostType>
+type ProfilePageType = {
     newPostText: string
+    posts: Array<PostType>
 }
 
 type MessageType = {
@@ -21,12 +21,10 @@ type DialogType = {
     id: number
     name: string
 }
-
-export type DialogsPageType = {
+ type DialogsPageType = {
+    newMessageText: string
     messages: Array<MessageType>
     dialogs: Array<DialogType>
-    newMessageText: string
-
 }
 
 export type StatePropsType = {
@@ -46,7 +44,7 @@ export type ActionsTypes =
 
 export type StoreType = {
     _state: StatePropsType
-    _rerenderEntireTree: () => void
+    _callSubscriber: () => void
     subscribe: (observer: () => void) => void
     getState: () => StatePropsType
     dispatch: (action: ActionsTypes) => void
@@ -55,15 +53,16 @@ export type StoreType = {
 export const store: StoreType = {
     _state: {
         profilePage: {
+            newPostText: '',
             posts: [
                 {id: 1, message: 'Hello world', likesCount: 10},
                 {id: 2, message: 'I like It-incubator', likesCount: 56},
                 {id: 3, message: 'I learn React', likesCount: 35},
                 {id: 4, message: 'I learn CSS', likesCount: 55},
-            ],
-            newPostText: ''
+            ]
         },
         dialogsPage: {
+            newMessageText: '',
             messages: [
                 {id: 1, message: 'Hi'},
                 {id: 2, message: 'How is your it-incubator?'},
@@ -76,25 +75,24 @@ export const store: StoreType = {
                 {id: 4, name: 'Alex'},
                 {id: 5, name: 'Sergei'},
                 {id: 6, name: 'Eva1'},
-            ],
-            newMessageText: ''
+            ]
         }
     },
 
-    _rerenderEntireTree() {
+    _callSubscriber() {
         console.log('State changed')
-        console.log(this._state)
+        //console.log(this._state)
     },
 
-    dispatch(action) { //action то объект, который описывает какое действие мы должны совершить.
+    dispatch(action:any) { //action то объект, который описывает какое действие мы должны совершить.
         //у этого объекта есть обязательное свойство ТИП
         this._state.profilePage = profileReducer(this._state.profilePage, action)
         this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
-        this._rerenderEntireTree()
+        this._callSubscriber()
     },
 
     subscribe(observer) { //observer-наблюдатель
-        this._rerenderEntireTree = observer;
+        this._callSubscriber = observer;
     },
     getState() {
         return this._state

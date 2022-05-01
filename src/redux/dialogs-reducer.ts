@@ -1,13 +1,28 @@
-import {ActionsTypes, DialogsPageType, ProfilePageType} from "./store";
-
 const ADD_MESSAGE = 'ADD-MESSAGE'
 const UPDATE_NEW_MESSAGE_TEXT = 'UPDATE-NEW-MESSAGE-TEXT'
+
+export type DialogsPageType = {
+    newMessageText: string
+    messages: Array<MessageType>
+    dialogs: Array<DialogType>
+}
+
+type MessageType = {
+    id: number
+    message: string
+}
+
+type DialogType = {
+    id: number
+    name: string
+}
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
 export type ActionsDialogsTypes = ReturnType<typeof addMessageActionCreator>
     | ReturnType<typeof updateNewMessageActionCreator>
 
 let initialState: DialogsPageType = {
+    newMessageText: '',
     messages: [
         {id: 1, message: 'Hi'},
         {id: 2, message: 'How is your it-incubator?'},
@@ -20,11 +35,10 @@ let initialState: DialogsPageType = {
         {id: 4, name: 'Alex'},
         {id: 5, name: 'Sergei'},
         {id: 6, name: 'Eva1'},
-    ],
-    newMessageText: ''
+    ]
 }
 
-export const dialogsReducer = (state: DialogsPageType = initialState, action: ActionsTypes) => {
+export const dialogsReducer = (state: DialogsPageType = initialState, action: ActionsDialogsTypes): DialogsPageType => {
     switch (action.type) {
         case ADD_MESSAGE:
             const message = {id: 4, message: state.newMessageText}
