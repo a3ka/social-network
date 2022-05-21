@@ -23,19 +23,25 @@ let initialState = {
         {id: 2, message: 'I like It-incubator', likesCount: 56},
         {id: 3, message: 'I learn React', likesCount: 35},
         {id: 4, message: 'I learn CSS', likesCount: 55},
-    ]
+    ] as Array<PostType>
 }
 
 export const profileReducer = (state: ProfilePageType = initialState, action: ActionsProfileTypes): ProfilePageType => {
     switch (action.type) {
-        case ADD_POST:
+        case ADD_POST: {
             const post = {id: 5, message: state.newPostText, likesCount: 205}
-            state.posts.push(post)
-            state.newPostText = ('')
-            return state
-        case UPDATE_NEW_POST_TEXT:
-            state.newPostText = action.newText
-            return state
+            let stateCopy = {...state}
+            stateCopy.posts = [...state.posts]
+            stateCopy.posts.push(post)
+            stateCopy.newPostText = ('')
+            return stateCopy
+        }
+        case UPDATE_NEW_POST_TEXT: {
+            let stateCopy = {...state}
+            stateCopy.newPostText = action.newText
+            return stateCopy
+        }
+
         default:
             return state
     }

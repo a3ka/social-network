@@ -27,7 +27,7 @@ let initialState: DialogsPageType = {
         {id: 1, message: 'Hi'},
         {id: 2, message: 'How is your it-incubator?'},
         {id: 3, message: 'Yo'},
-    ],
+    ] as Array<MessageType>,
     dialogs: [
         {id: 1, name: 'Andrey'},
         {id: 2, name: 'Ekaterina'},
@@ -35,19 +35,24 @@ let initialState: DialogsPageType = {
         {id: 4, name: 'Alex'},
         {id: 5, name: 'Sergei'},
         {id: 6, name: 'Eva1'},
-    ]
+    ] as Array<DialogType>
 }
 
 export const dialogsReducer = (state: DialogsPageType = initialState, action: ActionsDialogsTypes): DialogsPageType => {
     switch (action.type) {
-        case ADD_MESSAGE:
+        case ADD_MESSAGE: {
             const message = {id: 4, message: state.newMessageText}
-            state.messages.push(message)
-            state.newMessageText = ('')
-            return state
-        case UPDATE_NEW_MESSAGE_TEXT:
-            state.newMessageText = action.newMessage
-            return state
+            let stateCopy = {...state}
+            stateCopy.messages = [...state.messages]
+            stateCopy.messages.push(message)
+            stateCopy.newMessageText = ('')
+            return stateCopy
+        }
+        case UPDATE_NEW_MESSAGE_TEXT: {
+            let stateCopy = {...state}
+            stateCopy.newMessageText = action.newMessage
+            return stateCopy
+        }
         default:
             return state
     }
