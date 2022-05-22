@@ -3,7 +3,7 @@ import './App.css';
 import {Header} from "./components/Header/Header";
 import {Navbar} from "./components/Navbar/Navbar";
 import {Profile} from "./components/Profile/Profile";
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {ReduxStoreType} from "./redux/redux-store";
 import {DialogsContainer} from "./components/Dialogs/DialogsContainer";
 import UsersContainer from "./components/Users/UsersContainer";
@@ -14,19 +14,22 @@ export type AppPropsType = {
 
 const App: React.FC<AppPropsType> = (props) => {
     //const state = props.store.getState();
+
     return (
         <BrowserRouter>
             <div className="app-wrapper">
                 <Header/>
                 <Navbar/>
                 <div className='app-wrapper-content'>
-                    <Routes>
+                    {/*<Routes>*/}
+                    <Switch>
                         <Route path="dialogs/*"
-                               element={<DialogsContainer/>}/>
-                        <Route path="profile" element={<Profile/>}/>
-                        <Route path="news" element={'News'}/>
-                        <Route path="users" element={<UsersContainer/>}/>
-                    </Routes>
+                               render={() => <DialogsContainer/>}/>
+                        <Route path="profile" render={() => <Profile/>}/>
+                        <Route path="news" render={() => 'News'}/>
+                        <Route path="users" render={() => <UsersContainer/>}/>
+                        {/*</Routes>*/}
+                    </Switch>
                 </div>
             </div>
         </BrowserRouter>
