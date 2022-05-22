@@ -2,22 +2,33 @@ const FOLLOW = 'FOLLOW'
 const UNFOLLOW = 'UNFOLLOW'
 const SET_USERS = 'SET_USERS'
 
-export type ProfilePageType = {
-    newPostText: string
-    posts: Array<UsersType>
-}
+// export type UsersType = {
+//     id: number,
+//     photoUrl: string,
+//     followed: boolean,
+//     fullName: string,
+//     status: string,
+//     location: {
+//         city: string,
+//         country: string
+//     }
+// }
 
 export type UsersType = {
     id: number,
-    photoUrl: string,
+    photos: {
+        small: string,
+        large:string
+    },
     followed: boolean,
-    fullName: string,
+    name: string,
     status: string,
     location: {
         city: string,
         country: string
     }
 }
+
 
 export type UserPageType = {
     users: Array<UsersType>
