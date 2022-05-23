@@ -29,7 +29,6 @@ export type UsersType = {
     }
 }
 
-
 export type UserPageType = {
     users: Array<UsersType>
 }

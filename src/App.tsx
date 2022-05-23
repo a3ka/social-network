@@ -23,11 +23,12 @@ const App: React.FC<AppPropsType> = (props) => {
                 <div className='app-wrapper-content'>
                     {/*<Routes>*/}
                     <Switch>
-                        <Route path="dialogs/*"
+                        {/*instead render={()=> <Component>} -> element={<Component/>}*/}
+                        <Route path="/dialogs/*"
                                render={() => <DialogsContainer/>}/>
-                        <Route path="profile" render={() => <Profile/>}/>
-                        <Route path="news" render={() => 'News'}/>
-                        <Route path="users" render={() => <UsersContainer/>}/>
+                        <Route path="/profile" render={() => <Profile/>}/>
+                        <Route path="/news" render={() => 'News'}/>
+                        <Route path="/users" render={() => <UsersContainer/>}/>
                         {/*</Routes>*/}
                     </Switch>
                 </div>
