@@ -1,24 +1,14 @@
 const FOLLOW = 'FOLLOW'
 const UNFOLLOW = 'UNFOLLOW'
 const SET_USERS = 'SET_USERS'
-
-// export type UsersType = {
-//     id: number,
-//     photoUrl: string,
-//     followed: boolean,
-//     fullName: string,
-//     status: string,
-//     location: {
-//         city: string,
-//         country: string
-//     }
-// }
+const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
+const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT'
 
 export type UsersType = {
     id: number,
     photos: {
         small: string,
-        large:string
+        large: string
     },
     followed: boolean,
     name: string,
@@ -31,13 +21,20 @@ export type UsersType = {
 
 export type UserPageType = {
     users: Array<UsersType>
+    pageSize: number
+    totalUsersCount: number
+    currentPage: number
 }
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
-export type ActionsProfileTypes = ReturnType<typeof followAC>
-    | ReturnType<typeof unfollowAC> | ReturnType<typeof setUsersAC>
+export type ActionsProfileTypes =
+    ReturnType<typeof followAC> |
+    ReturnType<typeof unfollowAC> |
+    ReturnType<typeof setUsersAC> |
+    ReturnType<typeof setCurrentPageAC> |
+    ReturnType<typeof setTotalUsersCountAC>
 
-let initialState = {
+let initialState: UserPageType = {
     users: [
         // {id: 1,
         //     photoUrl: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F1.bp.blogspot.com%2F-LUnuKbi-eIY%2FXezzZvJW79I%2FAAAAAAAARZ4%2FKHk7ZQ_awiEqx9xLkJyzxx4SKG5o_9tdwCKgBGAsYHg%2Fs1600%2Ftumblr_psc030oOC51s9ulwzo2_1280.jpg&f=1&nofb=1',
@@ -62,8 +59,10 @@ let initialState = {
         //     status: 'Let me teach you',
         //     location: {city: 'Minsk', country: 'Belarus'}
         // },
-
-    ] as Array<UsersType>
+    ],
+    pageSize: 5,
+    totalUsersCount: 0,
+    currentPage: 1
 }
 
 export const usersReducer = (state: UserPageType = initialState, action: ActionsProfileTypes): UserPageType => {
@@ -79,7 +78,13 @@ export const usersReducer = (state: UserPageType = initialState, action: Actions
                 users: state.users.map(u => u.id === action.userId ? {...u, followed: false} : u)
             }
         case "SET_USERS":
-            return {...state, users: [...state.users, ...action.users]}
+            return {...state, users: action.users}
+
+        case "SET_CURRENT_PAGE":
+            return {...state, currentPage: action.currentPage}
+
+        case "SET_TOTAL_USERS_COUNT":
+            return  {...state, totalUsersCount: action.totalUsersCount}
 
         default:
             return state
@@ -100,5 +105,17 @@ export const unfollowAC = (userId: number) => {
 export const setUsersAC = (users: Array<UsersType>) => {
     return {
         type: SET_USERS, users
+    } as const
+}
+
+export const setCurrentPageAC = (currentPage: number) => {
+    return {
+        type: SET_CURRENT_PAGE, currentPage
+    } as const
+}
+
+export const setTotalUsersCountAC = (totalUsersCount: number) => {
+    return {
+        type: SET_TOTAL_USERS_COUNT, totalUsersCount
     } as const
 }

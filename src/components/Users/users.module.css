@@ -3,3 +3,13 @@
     height: 150px;
     padding: 10px;
 }
+
+
+.name {
+    color: red;
+    font-weight: bold;
+}
+
+.selectedPage {
+    font-weight: bold;
+}
