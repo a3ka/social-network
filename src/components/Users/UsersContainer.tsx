@@ -5,7 +5,7 @@ import {AppStateType} from "../../redux/redux-store";
 import {Dispatch} from "redux";
 import {
     followAC,
-    setCurrentPageAC,
+    setCurrentPageAC, setPaginationStartEndAC,
     setTotalUsersCountAC,
     setUsersAC,
     unfollowAC,
@@ -23,8 +23,10 @@ type MapDispatchToProps = {
     unfollow: (userId: number) => void
     setUsers: (users: Array<UsersType>) => void
     setCurrentPage: (currentPage: number) => void
-    setTotalUsersCount: (totalUsersCount:number) => void
+    setTotalUsersCount: (totalUsersCount: number) => void
+    setPaginationStartEnd: (rerenderDirection: "left" | "right") => void
 }
+
 
 export type UsersPropsType = UserPageType & MapDispatchToProps
 
@@ -34,7 +36,8 @@ let mapStateToProps = (state: AppStateType): UserPageType => {
         users: state.usersPage.users,
         pageSize: state.usersPage.pageSize,
         totalUsersCount: state.usersPage.totalUsersCount,
-        currentPage: state.usersPage.currentPage
+        currentPage: state.usersPage.currentPage,
+        paginationStartEnd: state.usersPage.paginationStartEnd
     }
 }
 
@@ -55,7 +58,11 @@ let mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
         },
         setTotalUsersCount: (totalUsersCount:number) => {
             dispatch(setTotalUsersCountAC(totalUsersCount))
+        },
+        setPaginationStartEnd: (rerenderDirection: "left" | "right") => {
+           dispatch(setPaginationStartEndAC(rerenderDirection))
         }
+
     }
 }
 

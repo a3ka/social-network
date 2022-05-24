@@ -3,6 +3,8 @@ const UNFOLLOW = 'UNFOLLOW'
 const SET_USERS = 'SET_USERS'
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT'
+const SET_PAGINATION_START_END = 'SET_PAGINATION_START_END'
+
 
 export type UsersType = {
     id: number,
@@ -24,6 +26,7 @@ export type UserPageType = {
     pageSize: number
     totalUsersCount: number
     currentPage: number
+    paginationStartEnd: number[]
 }
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
@@ -32,7 +35,12 @@ export type ActionsProfileTypes =
     ReturnType<typeof unfollowAC> |
     ReturnType<typeof setUsersAC> |
     ReturnType<typeof setCurrentPageAC> |
-    ReturnType<typeof setTotalUsersCountAC>
+    ReturnType<typeof setTotalUsersCountAC> |
+    ReturnType<typeof setPaginationStartEndAC>
+
+
+let startPagination = 0;
+let endPagination = 20;
 
 let initialState: UserPageType = {
     users: [
@@ -60,9 +68,10 @@ let initialState: UserPageType = {
         //     location: {city: 'Minsk', country: 'Belarus'}
         // },
     ],
-    pageSize: 5,
+    pageSize: 7,
     totalUsersCount: 0,
-    currentPage: 1
+    currentPage: 1,
+    paginationStartEnd: [startPagination, endPagination]
 }
 
 export const usersReducer = (state: UserPageType = initialState, action: ActionsProfileTypes): UserPageType => {
@@ -85,6 +94,10 @@ export const usersReducer = (state: UserPageType = initialState, action: Actions
 
         case "SET_TOTAL_USERS_COUNT":
             return  {...state, totalUsersCount: action.totalUsersCount}
+
+        case "SET_PAGINATION_START_END":
+            return {...state,
+                paginationStartEnd: action.rerenderDirection === "left" ? [startPagination -= 30, endPagination -= 30] : [startPagination += 30, endPagination += 30]}
 
         default:
             return state
@@ -117,5 +130,11 @@ export const setCurrentPageAC = (currentPage: number) => {
 export const setTotalUsersCountAC = (totalUsersCount: number) => {
     return {
         type: SET_TOTAL_USERS_COUNT, totalUsersCount
+    } as const
+}
+
+export const setPaginationStartEndAC = (rerenderDirection: "left" | "right") => {
+    return {
+        type: SET_PAGINATION_START_END, rerenderDirection
     } as const
 }
