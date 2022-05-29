@@ -4,11 +4,13 @@ import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
 import {Dispatch} from "redux";
 import {
-    followAC,
-    setCurrentPageAC, setPaginationStartEndAC,
-    setTotalUsersCountAC,
-    setUsersAC, toggleIsFetchingAC,
-    unfollowAC,
+    follow,
+    setCurrentPage,
+    setPaginationStartEnd,
+    setTotalUsersCount,
+    setUsers,
+    toggleIsFetching,
+    unfollow,
     UserPageType,
     UsersType
 } from "../../redux/users-reducer";
@@ -44,31 +46,39 @@ let mapStateToProps = (state: AppStateType): UserPageType => {
 }
 
 
-let mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
-    return {
-        follow: (userId: number) => {
-            dispatch(followAC(userId))
-        },
-        unfollow: (userId: number) => {
-            dispatch(unfollowAC(userId))
-        },
-        setUsers:(users: Array<UsersType>) => {
-            dispatch(setUsersAC(users))
-        },
-        setCurrentPage: (currentPage:number) => {
-            dispatch(setCurrentPageAC(currentPage))
-        },
-        setTotalUsersCount: (totalUsersCount:number) => {
-            dispatch(setTotalUsersCountAC(totalUsersCount))
-        },
-        toggleIsFetching: (isFetching: boolean) => {
-            dispatch(toggleIsFetchingAC(isFetching))
-        },
-        setPaginationStartEnd: (rerenderDirection: "left" | "right") => {
-           dispatch(setPaginationStartEndAC(rerenderDirection))
-        }
+// let mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
+//     return {
+//         follow: (userId: number) => {
+//             dispatch(follow(userId))
+//         },
+//         unfollow: (userId: number) => {
+//             dispatch(unfollow(userId))
+//         },
+//         setUsers:(users: Array<UsersType>) => {
+//             dispatch(setUsers(users))
+//         },
+//         setCurrentPage: (currentPage:number) => {
+//             dispatch(setCurrentPage(currentPage))
+//         },
+//         setTotalUsersCount: (totalUsersCount:number) => {
+//             dispatch(setTotalUsersCount(totalUsersCount))
+//         },
+//         toggleIsFetching: (isFetching: boolean) => {
+//             dispatch(toggleIsFetching(isFetching))
+//         },
+//         setPaginationStartEnd: (rerenderDirection: "left" | "right") => {
+//            dispatch(setPaginationStartEnd(rerenderDirection))
+//         }
+//
+//     }
+// }
 
-    }
-}
-
-export default connect<UserPageType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, mapDispatchToProps)(UsersAPIComponent)
+export default connect<UserPageType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {
+    follow,
+    unfollow,
+    setUsers,
+    setCurrentPage,
+    setTotalUsersCount,
+    toggleIsFetching,
+    setPaginationStartEnd
+})(UsersAPIComponent)

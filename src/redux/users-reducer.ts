@@ -33,13 +33,13 @@ export type UserPageType = {
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
 export type ActionsProfileTypes =
-    ReturnType<typeof followAC> |
-    ReturnType<typeof unfollowAC> |
-    ReturnType<typeof setUsersAC> |
-    ReturnType<typeof setCurrentPageAC> |
-    ReturnType<typeof setTotalUsersCountAC> |
-    ReturnType<typeof setPaginationStartEndAC> |
-    ReturnType<typeof toggleIsFetchingAC>
+    ReturnType<typeof follow> |
+    ReturnType<typeof unfollow> |
+    ReturnType<typeof setUsers> |
+    ReturnType<typeof setCurrentPage> |
+    ReturnType<typeof setTotalUsersCount> |
+    ReturnType<typeof setPaginationStartEnd> |
+    ReturnType<typeof toggleIsFetching>
 
 
 let startPagination = 0;
@@ -111,42 +111,42 @@ export const usersReducer = (state: UserPageType = initialState, action: Actions
     }
 }
 
-export const followAC = (userId: number) => {
+export const follow = (userId: number) => {
     return {
         type: FOLLOW, userId
     } as const
 }
-export const unfollowAC = (userId: number) => {
+export const unfollow = (userId: number) => {
     return {
         type: UNFOLLOW, userId
     } as const
 }
 
-export const setUsersAC = (users: Array<UsersType>) => {
+export const setUsers = (users: Array<UsersType>) => {
     return {
         type: SET_USERS, users
     } as const
 }
 
-export const setCurrentPageAC = (currentPage: number) => {
+export const setCurrentPage = (currentPage: number) => {
     return {
         type: SET_CURRENT_PAGE, currentPage
     } as const
 }
 
-export const setTotalUsersCountAC = (totalUsersCount: number) => {
+export const setTotalUsersCount = (totalUsersCount: number) => {
     return {
         type: SET_TOTAL_USERS_COUNT, totalUsersCount
     } as const
 }
 
-export const toggleIsFetchingAC = (isFetching: boolean) => {
+export const toggleIsFetching = (isFetching: boolean) => {
     return {
         type: TOGGLE_IS_FETCHING, isFetching
     } as const
 }
 
-export const setPaginationStartEndAC = (rerenderDirection: "left" | "right") => {
+export const setPaginationStartEnd = (rerenderDirection: "left" | "right") => {
     return {
         type: SET_PAGINATION_START_END, rerenderDirection
     } as const
