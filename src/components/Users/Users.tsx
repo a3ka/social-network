@@ -1,50 +1,55 @@
 import React from "react";
-import styles from './users.module.css'
-import {UsersPropsType} from "./UsersContainer";
-import axios from "axios";
+import styles from "./users.module.css";
+import {UserPageType, UsersType} from "../../redux/users-reducer";
+import {UsersContainerPropsType} from "./UsersContainer";
+import user_logo from "../../assets/images/user_logo.png"
+
+export type UsersPropsType = {
+    users: Array<UsersType>
+    pageSize: number
+    totalUsersCount: number
+    currentPage: number
+    paginationStartEnd: number[]
+    follow: (userId: number) => void
+    unfollow: (userId: number) => void
+    onPageChanged: (pageNumber: number) => void
+    renderPagination: (rerenderDirection: "left" | "right") => void
+
+}
 
 export const Users = (props: UsersPropsType) => {
 
-    if (props.users.length === 0) {
-
-        axios.get("https://social-network.samuraijs.com/api/1.0/users").then(response => {
-            props.setUsers(response.data.items)
-        })
-
-        // props.setUsers([
-        //     {
-        //         id: 1,
-        //         photoUrl: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F1.bp.blogspot.com%2F-LUnuKbi-eIY%2FXezzZvJW79I%2FAAAAAAAARZ4%2FKHk7ZQ_awiEqx9xLkJyzxx4SKG5o_9tdwCKgBGAsYHg%2Fs1600%2Ftumblr_psc030oOC51s9ulwzo2_1280.jpg&f=1&nofb=1',
-        //         followed: true,
-        //         fullName: 'Alex',
-        //         status: 'I am a boss',
-        //         location: {city: 'Kiev', country: 'Ukraine'}
-        //     },
-        //     {
-        //         id: 2,
-        //         photoUrl: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fyt3.ggpht.com%2Fa%2FAATXAJxhHlZn3p5IQpCh6OeH4II2GkQXqWKg0LMjjA%3Ds900-c-k-c0xffffffff-no-rj-mo&f=1&nofb=1',
-        //         followed: false,
-        //         fullName: 'Serg K',
-        //         status: 'I am good in cooking',
-        //         location: {city: 'Moscow', country: 'Russia'}
-        //     },
-        //     {
-        //         id: 3,
-        //         photoUrl: 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.nswiki.org%2Fimages%2Fthumb%2FEmperor_Serg_Vorbarra.jpg%2F200px-Emperor_Serg_Vorbarra.jpg&f=1&nofb=1',
-        //         followed: true,
-        //         fullName: 'Dimych',
-        //         status: 'Let me teach you',
-        //         location: {city: 'Minsk', country: 'Belarus'}
-        //     }
-        // ])
+    let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+        pages.push(i)
     }
 
     return <div>
+        <div>
+
+                <span onClick={(e) => {
+                    props.renderPagination("left")
+                }
+
+                }> &#8592; </span>
+
+            {pages.slice(props.paginationStartEnd[0], props.paginationStartEnd[1]).map(page => <span onClick={(e) => {
+                props.onPageChanged(page)
+            }} className={props.currentPage === page ? styles.selectedPage : ''}>{page} &nbsp;</span>)}
+
+            <span onClick={(e) => {
+                props.renderPagination("right")
+            }
+            }> &#8594; </span>
+        </div>
         {
             props.users.map(u => <div key={u.id}>
                 <span>
                     <div>
-                        <img src={ u.photos.small !== null ? u.photos.small : "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.shareicon.net%2Fdata%2F2016%2F09%2F01%2F822711_user_512x512.png&f=1&nofb=1"} className={styles.usersPhoto}/>
+                        <img
+                            src={ u.photos.small !== null ? u.photos.small : user_logo }
+                            className={styles.usersPhoto}/>
                     </div>
                     <div>
                         {u.followed
@@ -70,4 +75,5 @@ export const Users = (props: UsersPropsType) => {
             </div>)
         }
     </div>
+
 }

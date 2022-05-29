@@ -1,5 +1,5 @@
 import React from "react";
-import {Users} from "./UsersC";
+import {UsersAPIComponent} from "./UsersAPIComponent";
 import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
 import {Dispatch} from "redux";
@@ -7,7 +7,7 @@ import {
     followAC,
     setCurrentPageAC, setPaginationStartEndAC,
     setTotalUsersCountAC,
-    setUsersAC,
+    setUsersAC, toggleIsFetchingAC,
     unfollowAC,
     UserPageType,
     UsersType
@@ -24,11 +24,12 @@ type MapDispatchToProps = {
     setUsers: (users: Array<UsersType>) => void
     setCurrentPage: (currentPage: number) => void
     setTotalUsersCount: (totalUsersCount: number) => void
+    toggleIsFetching: (isFetching: boolean) => void
     setPaginationStartEnd: (rerenderDirection: "left" | "right") => void
 }
 
 
-export type UsersPropsType = UserPageType & MapDispatchToProps
+export type UsersContainerPropsType = UserPageType & MapDispatchToProps
 
 
 let mapStateToProps = (state: AppStateType): UserPageType => {
@@ -37,7 +38,8 @@ let mapStateToProps = (state: AppStateType): UserPageType => {
         pageSize: state.usersPage.pageSize,
         totalUsersCount: state.usersPage.totalUsersCount,
         currentPage: state.usersPage.currentPage,
-        paginationStartEnd: state.usersPage.paginationStartEnd
+        paginationStartEnd: state.usersPage.paginationStartEnd,
+        isFetching: state.usersPage.isFetching
     }
 }
 
@@ -59,6 +61,9 @@ let mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
         setTotalUsersCount: (totalUsersCount:number) => {
             dispatch(setTotalUsersCountAC(totalUsersCount))
         },
+        toggleIsFetching: (isFetching: boolean) => {
+            dispatch(toggleIsFetchingAC(isFetching))
+        },
         setPaginationStartEnd: (rerenderDirection: "left" | "right") => {
            dispatch(setPaginationStartEndAC(rerenderDirection))
         }
@@ -66,4 +71,4 @@ let mapDispatchToProps = (dispatch: Dispatch): MapDispatchToProps => {
     }
 }
 
-export default connect<UserPageType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, mapDispatchToProps)(Users)
+export default connect<UserPageType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, mapDispatchToProps)(UsersAPIComponent)

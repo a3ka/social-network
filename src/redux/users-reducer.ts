@@ -4,6 +4,7 @@ const SET_USERS = 'SET_USERS'
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT'
 const SET_PAGINATION_START_END = 'SET_PAGINATION_START_END'
+const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
 
 
 export type UsersType = {
@@ -27,6 +28,7 @@ export type UserPageType = {
     totalUsersCount: number
     currentPage: number
     paginationStartEnd: number[]
+    isFetching: boolean
 }
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
@@ -36,7 +38,8 @@ export type ActionsProfileTypes =
     ReturnType<typeof setUsersAC> |
     ReturnType<typeof setCurrentPageAC> |
     ReturnType<typeof setTotalUsersCountAC> |
-    ReturnType<typeof setPaginationStartEndAC>
+    ReturnType<typeof setPaginationStartEndAC> |
+    ReturnType<typeof toggleIsFetchingAC>
 
 
 let startPagination = 0;
@@ -71,7 +74,8 @@ let initialState: UserPageType = {
     pageSize: 7,
     totalUsersCount: 0,
     currentPage: 1,
-    paginationStartEnd: [startPagination, endPagination]
+    paginationStartEnd: [startPagination, endPagination],
+    isFetching: true
 }
 
 export const usersReducer = (state: UserPageType = initialState, action: ActionsProfileTypes): UserPageType => {
@@ -95,9 +99,12 @@ export const usersReducer = (state: UserPageType = initialState, action: Actions
         case "SET_TOTAL_USERS_COUNT":
             return  {...state, totalUsersCount: action.totalUsersCount}
 
+        case "TOGGLE_IS_FETCHING":
+            return  {...state, isFetching: action.isFetching}
+
         case "SET_PAGINATION_START_END":
             return {...state,
-                paginationStartEnd: action.rerenderDirection === "left" ? [startPagination -= 30, endPagination -= 30] : [startPagination += 30, endPagination += 30]}
+                paginationStartEnd: action.rerenderDirection === "left" ? [startPagination -= 20, endPagination -= 20] : [startPagination += 20, endPagination += 20]}
 
         default:
             return state
@@ -130,6 +137,12 @@ export const setCurrentPageAC = (currentPage: number) => {
 export const setTotalUsersCountAC = (totalUsersCount: number) => {
     return {
         type: SET_TOTAL_USERS_COUNT, totalUsersCount
+    } as const
+}
+
+export const toggleIsFetchingAC = (isFetching: boolean) => {
+    return {
+        type: TOGGLE_IS_FETCHING, isFetching
     } as const
 }
 

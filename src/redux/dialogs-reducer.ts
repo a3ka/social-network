@@ -41,7 +41,6 @@ let initialState: DialogsPageType = {
 export const dialogsReducer = (state: DialogsPageType = initialState, action: ActionsDialogsTypes): DialogsPageType => {
     switch (action.type) {
         case ADD_MESSAGE:
-            const message = {id: 4, message: state.newMessageText}
             let text = state.newMessageText;
 
             return {
