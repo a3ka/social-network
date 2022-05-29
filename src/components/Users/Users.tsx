@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./users.module.css";
-import {UserPageType, UsersType} from "../../redux/users-reducer";
-import {UsersContainerPropsType} from "./UsersContainer";
+import {UsersType} from "../../redux/users-reducer";
 import user_logo from "../../assets/images/user_logo.png"
+import {NavLink} from "react-router-dom";
 
 export type UsersPropsType = {
     users: Array<UsersType>
@@ -27,7 +27,6 @@ export const Users = (props: UsersPropsType) => {
 
     return <div>
         <div>
-
                 <span onClick={(e) => {
                     props.renderPagination("left")
                 }
@@ -47,9 +46,11 @@ export const Users = (props: UsersPropsType) => {
             props.users.map(u => <div key={u.id}>
                 <span>
                     <div>
-                        <img
-                            src={ u.photos.small !== null ? u.photos.small : user_logo }
+                        <NavLink to={'/profile/' + u.id}>
+                            <img
+                            src={u.photos.small !== null ? u.photos.small : user_logo}
                             className={styles.usersPhoto}/>
+                        </NavLink>
                     </div>
                     <div>
                         {u.followed
