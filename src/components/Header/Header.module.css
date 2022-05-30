@@ -15,6 +15,21 @@
     margin-left: 20px;
 }
 
-.text {
-    text-align: center;
+.name {
+    font-size: 40px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #a9dade;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.login {
+    color: white;
+    text-decoration: none;
 }

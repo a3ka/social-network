@@ -15,10 +15,6 @@ import {
 } from "../../redux/users-reducer";
 
 
-// type MapStateToProps = {
-//     userPage: UserPageType
-// }
-
 type MapDispatchToProps = {
     follow: (userId: number) => void
     unfollow: (userId: number) => void

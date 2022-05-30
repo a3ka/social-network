@@ -14,7 +14,6 @@ export type UsersPropsType = {
     unfollow: (userId: number) => void
     onPageChanged: (pageNumber: number) => void
     renderPagination: (rerenderDirection: "left" | "right") => void
-
 }
 
 export const Users = (props: UsersPropsType) => {
