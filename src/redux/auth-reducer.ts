@@ -38,7 +38,6 @@ export const authReducer = (state: AuthType = initialState, action: ActionsProfi
         case SET_USER_PHOTO:
             return {
                 ...state,
-                ...action.data,
                 photo: action.data.photo
             }
         case TOGGLE_IS_FETCHING:
@@ -50,6 +49,7 @@ export const authReducer = (state: AuthType = initialState, action: ActionsProfi
 
 export const setAuthUserData = (userId: number, login: string, email: string) => {
     return {
+        // type: SET_USER_DATA, data: {userId, login, email}
         type: SET_USER_DATA, data: {userId, login, email}
     } as const
 }

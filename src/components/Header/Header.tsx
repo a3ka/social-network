@@ -2,9 +2,12 @@ import React from "react";
 import {NavLink} from "react-router-dom";
 import s from './Header.module.css'
 import {HeaderPropsType} from "./HeaderContainer";
+import user_logo from "../../assets/images/user_logo.png";
 
 
 export const Header = (props: HeaderPropsType) => {
+
+
     return <header className={s.header}>
 
         <div className={s.container}>
@@ -17,8 +20,10 @@ export const Header = (props: HeaderPropsType) => {
               CRYPTO WAll
             </span>
 
-            <span>
-                <span>{props.photo}</span>
+            <span className={s.subcontainer}>
+
+                    <img src={props.photo !== null ? props.photo : user_logo} className={s.usersPhoto}/>
+
                 <span>{props.isAuth ? props.login
                     : <NavLink to={'/login'} className={s.login}>Login</NavLink>}</span>
             </span>
