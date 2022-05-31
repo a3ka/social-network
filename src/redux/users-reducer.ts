@@ -5,6 +5,7 @@ const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT'
 const SET_PAGINATION_START_END = 'SET_PAGINATION_START_END'
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
+const TOGGLE_FOLLOWING_PROGRESS = 'TOGGLE_FOLLOWING_PROGRESS'
 
 
 export type UsersType = {
@@ -29,6 +30,7 @@ export type UserPageType = {
     currentPage: number
     paginationStartEnd: number[]
     isFetching: boolean
+    followingInProgress: (number | boolean)[]
 }
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
@@ -39,43 +41,22 @@ export type ActionsProfileTypes =
     ReturnType<typeof setCurrentPage> |
     ReturnType<typeof setTotalUsersCount> |
     ReturnType<typeof setPaginationStartEnd> |
-    ReturnType<typeof toggleIsFetching>
+    ReturnType<typeof toggleIsFetching> |
+    ReturnType<typeof toggleFollowingProgress>
+
 
 
 let startPagination = 0;
 let endPagination = 20;
 
 let initialState: UserPageType = {
-    users: [
-        // {id: 1,
-        //     photoUrl: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F1.bp.blogspot.com%2F-LUnuKbi-eIY%2FXezzZvJW79I%2FAAAAAAAARZ4%2FKHk7ZQ_awiEqx9xLkJyzxx4SKG5o_9tdwCKgBGAsYHg%2Fs1600%2Ftumblr_psc030oOC51s9ulwzo2_1280.jpg&f=1&nofb=1',
-        //     followed: true,
-        //     fullName: 'Alex',
-        //     status: 'I am a boss',
-        //     location: {city: 'Kiev', country: 'Ukraine'}
-        // },
-        // {
-        //     id: 2,
-        //     photoUrl: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fyt3.ggpht.com%2Fa%2FAATXAJxhHlZn3p5IQpCh6OeH4II2GkQXqWKg0LMjjA%3Ds900-c-k-c0xffffffff-no-rj-mo&f=1&nofb=1',
-        //     followed: false,
-        //     fullName: 'Serg K',
-        //     status: 'I am good in cooking',
-        //     location: {city: 'Moscow', country: 'Russia'}
-        // },
-        // {
-        //     id: 3,
-        //     photoUrl: 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.nswiki.org%2Fimages%2Fthumb%2FEmperor_Serg_Vorbarra.jpg%2F200px-Emperor_Serg_Vorbarra.jpg&f=1&nofb=1',
-        //     followed: true,
-        //     fullName: 'Dimych',
-        //     status: 'Let me teach you',
-        //     location: {city: 'Minsk', country: 'Belarus'}
-        // },
-    ],
+    users: [],
     pageSize: 7,
     totalUsersCount: 0,
     currentPage: 1,
     paginationStartEnd: [startPagination, endPagination],
-    isFetching: true
+    isFetching: false,
+    followingInProgress: [false, 0]
 }
 
 export const usersReducer = (state: UserPageType = initialState, action: ActionsProfileTypes): UserPageType => {
@@ -102,10 +83,16 @@ export const usersReducer = (state: UserPageType = initialState, action: Actions
         case "TOGGLE_IS_FETCHING":
             return  {...state, isFetching: action.isFetching}
 
+        case "TOGGLE_FOLLOWING_PROGRESS":
+            return  {...state,
+                followingInProgress: action.isFetching
+                    ? [...state.followingInProgress, action.userId]
+                    : state.followingInProgress.filter(id => id != action.userId)
+            }
+
         case "SET_PAGINATION_START_END":
             return {...state,
                 paginationStartEnd: action.rerenderDirection === "left" ? [startPagination -= 20, endPagination -= 20] : [startPagination += 20, endPagination += 20]}
-
         default:
             return state
     }
@@ -143,6 +130,12 @@ export const setTotalUsersCount = (totalUsersCount: number) => {
 export const toggleIsFetching = (isFetching: boolean) => {
     return {
         type: TOGGLE_IS_FETCHING, isFetching
+    } as const
+}
+
+export const toggleFollowingProgress = (isFetching: boolean, userId: number) => {
+    return {
+        type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId
     } as const
 }
 

@@ -46,6 +46,8 @@ export class UsersAPIComponent extends React.Component<UsersContainerPropsType> 
                 paginationStartEnd={this.props.paginationStartEnd}
                 follow={this.props.follow}
                 unfollow={this.props.unfollow}
+                toggleFollowingProgress={this.props.toggleFollowingProgress}
+                followingInProgress={this.props.followingInProgress}
                 onPageChanged={this.onPageChanged}
                 renderPagination={this.renderPagination}
             />

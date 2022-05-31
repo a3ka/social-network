@@ -8,7 +8,7 @@ import {
     setPaginationStartEnd,
     setTotalUsersCount,
     setUsers,
-    toggleIsFetching,
+    toggleIsFetching, toggleFollowingProgress,
     unfollow,
     UserPageType,
     UsersType
@@ -22,6 +22,7 @@ type MapDispatchToProps = {
     setCurrentPage: (currentPage: number) => void
     setTotalUsersCount: (totalUsersCount: number) => void
     toggleIsFetching: (isFetching: boolean) => void
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
     setPaginationStartEnd: (rerenderDirection: "left" | "right") => void
 }
 
@@ -36,7 +37,8 @@ let mapStateToProps = (state: AppStateType): UserPageType => {
         totalUsersCount: state.usersPage.totalUsersCount,
         currentPage: state.usersPage.currentPage,
         paginationStartEnd: state.usersPage.paginationStartEnd,
-        isFetching: state.usersPage.isFetching
+        isFetching: state.usersPage.isFetching,
+        followingInProgress: state.usersPage.followingInProgress
     }
 }
 
@@ -75,5 +77,6 @@ export default connect<UserPageType, MapDispatchToProps, {}, AppStateType>(mapSt
     setCurrentPage,
     setTotalUsersCount,
     toggleIsFetching,
+    toggleFollowingProgress,
     setPaginationStartEnd
 })(UsersAPIComponent)
