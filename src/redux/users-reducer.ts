@@ -1,3 +1,6 @@
+import {authAPI, followAPI, userAPI} from "../api/api";
+import {Dispatch} from "redux";
+
 const FOLLOW = 'FOLLOW'
 const UNFOLLOW = 'UNFOLLOW'
 const SET_USERS = 'SET_USERS'
@@ -35,15 +38,14 @@ export type UserPageType = {
 
 //Автоматическая типизация AC на основе возвращаемого значения функции AC
 export type ActionsProfileTypes =
-    ReturnType<typeof follow> |
-    ReturnType<typeof unfollow> |
+    ReturnType<typeof followSuccess> |
+    ReturnType<typeof unfollowSuccess> |
     ReturnType<typeof setUsers> |
     ReturnType<typeof setCurrentPage> |
     ReturnType<typeof setTotalUsersCount> |
     ReturnType<typeof setPaginationStartEnd> |
     ReturnType<typeof toggleIsFetching> |
     ReturnType<typeof toggleFollowingProgress>
-
 
 
 let startPagination = 0;
@@ -78,69 +80,108 @@ export const usersReducer = (state: UserPageType = initialState, action: Actions
             return {...state, currentPage: action.currentPage}
 
         case "SET_TOTAL_USERS_COUNT":
-            return  {...state, totalUsersCount: action.totalUsersCount}
+            return {...state, totalUsersCount: action.totalUsersCount}
 
         case "TOGGLE_IS_FETCHING":
-            return  {...state, isFetching: action.isFetching}
+            return {...state, isFetching: action.isFetching}
 
         case "TOGGLE_FOLLOWING_PROGRESS":
-            return  {...state,
+            return {
+                ...state,
                 followingInProgress: action.isFetching
                     ? [...state.followingInProgress, action.userId]
-                    : state.followingInProgress.filter(id => id != action.userId)
+                    : state.followingInProgress.filter(id => id !== action.userId)
             }
 
         case "SET_PAGINATION_START_END":
-            return {...state,
-                paginationStartEnd: action.rerenderDirection === "left" ? [startPagination -= 20, endPagination -= 20] : [startPagination += 20, endPagination += 20]}
+            return {
+                ...state,
+                paginationStartEnd: action.rerenderDirection === "left" ? [startPagination -= 20, endPagination -= 20] : [startPagination += 20, endPagination += 20]
+            }
         default:
             return state
     }
 }
 
-export const follow = (userId: number) => {
+export const followSuccess = (userId: number) => {
     return {
         type: FOLLOW, userId
     } as const
 }
-export const unfollow = (userId: number) => {
+export const unfollowSuccess = (userId: number) => {
     return {
         type: UNFOLLOW, userId
     } as const
 }
-
 export const setUsers = (users: Array<UsersType>) => {
     return {
         type: SET_USERS, users
     } as const
 }
-
 export const setCurrentPage = (currentPage: number) => {
     return {
         type: SET_CURRENT_PAGE, currentPage
     } as const
 }
-
 export const setTotalUsersCount = (totalUsersCount: number) => {
     return {
         type: SET_TOTAL_USERS_COUNT, totalUsersCount
     } as const
 }
-
 export const toggleIsFetching = (isFetching: boolean) => {
     return {
         type: TOGGLE_IS_FETCHING, isFetching
     } as const
 }
-
 export const toggleFollowingProgress = (isFetching: boolean, userId: number) => {
     return {
         type: TOGGLE_FOLLOWING_PROGRESS, isFetching, userId
     } as const
 }
-
 export const setPaginationStartEnd = (rerenderDirection: "left" | "right") => {
     return {
         type: SET_PAGINATION_START_END, rerenderDirection
     } as const
 }
+
+export const getUsers = (currentPage: number, pageSize: number) => {
+    return (dispatch: Dispatch) => {
+
+        dispatch(toggleIsFetching(true))
+
+        userAPI.getUsers(currentPage, pageSize).then(data => {
+            dispatch(toggleIsFetching(false))
+            dispatch(setUsers(data.items))
+            dispatch(setTotalUsersCount(data.totalCount))
+        })
+    }
+}
+
+export const follow = (userId: number) => {
+
+    return (dispatch: Dispatch) => {
+        dispatch(toggleFollowingProgress(true, userId))
+
+        followAPI.followUser(userId).then(data => {
+            if (data.resultCode === 0) {
+                dispatch(followSuccess(userId))
+            }
+            dispatch(toggleFollowingProgress(false, userId))
+        })
+    }
+}
+
+export const unfollow = (userId: number) => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleFollowingProgress(true, userId))
+
+        followAPI.unfollowUser(userId).then(data => {
+            if (data.resultCode === 0) {
+                dispatch(unfollowSuccess(userId))
+            }
+            dispatch(toggleFollowingProgress(false, userId))
+        })
+    }
+}
+
+

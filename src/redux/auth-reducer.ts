@@ -1,3 +1,6 @@
+import {Dispatch} from "redux";
+import {authAPI, userAPI} from "../api/api";
+
 const SET_USER_DATA = 'SET_USER_DATA'
 const SET_USER_PHOTO = 'SET_USER_PHOTO'
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
@@ -65,3 +68,23 @@ export const toggleIsFetching = (isFetching: boolean) => {
         type: TOGGLE_IS_FETCHING, isFetching
     } as const
 }
+
+export const getMyLogo = () => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleIsFetching(true))
+        authAPI.getMyData().then(data => {
+            if (data.resultCode === 0) {
+                let {id, login, email} = data.data
+                dispatch(setAuthUserData(id, login, email))
+            }
+            return data.data
+        })
+            .then(myData => {
+                // axios.get(`https://social-network.samuraijs.com/api/1.0/users?term=Maksim_KaNDeR`)
+                userAPI.getExactUserByLogin(myData.login).then(response => {
+                    dispatch(setUserPhoto(response.data.items[0].photos.small))
+                })
+            })
+    }
+}
+

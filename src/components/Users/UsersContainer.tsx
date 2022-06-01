@@ -1,29 +1,64 @@
 import React from "react";
-import {UsersAPIComponent} from "./UsersAPIComponent";
 import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
 import {
-    follow,
     setCurrentPage,
     setPaginationStartEnd,
-    setTotalUsersCount,
-    setUsers,
-    toggleIsFetching, toggleFollowingProgress,
+    toggleFollowingProgress,
     unfollow,
     UserPageType,
-    UsersType
+    getUsers, follow
 } from "../../redux/users-reducer";
+
+import {Users} from "./Users";
+import {Preloader} from "../common/Preloader/Preloader";
+
+
+class UsersContainer extends React.Component<UsersContainerPropsType> {
+
+
+    componentDidMount() {
+        this.props.getUsers(this.props.currentPage, this.props.pageSize)
+    }
+
+    onPageChanged = (pageNumber: number) => {
+        this.props.setCurrentPage(pageNumber)
+        this.props.getUsers(pageNumber, this.props.pageSize)
+    }
+
+
+    renderPagination = (rerenderDirection: "left" | "right") => {
+        this.props.setPaginationStartEnd(rerenderDirection)
+    }
+
+    render() {
+        return <>
+            {this.props.isFetching ? <Preloader /> : null}
+            <Users
+                users={this.props.users}
+                pageSize={this.props.pageSize}
+                totalUsersCount={this.props.totalUsersCount}
+                currentPage={this.props.currentPage}
+                paginationStartEnd={this.props.paginationStartEnd}
+                follow={this.props.follow}
+                unfollow={this.props.unfollow}
+                followingInProgress={this.props.followingInProgress}
+                onPageChanged={this.onPageChanged}
+                renderPagination={this.renderPagination}
+            />
+        </>
+    }
+}
+
 
 
 type MapDispatchToProps = {
     follow: (userId: number) => void
     unfollow: (userId: number) => void
-    setUsers: (users: Array<UsersType>) => void
     setCurrentPage: (currentPage: number) => void
-    setTotalUsersCount: (totalUsersCount: number) => void
-    toggleIsFetching: (isFetching: boolean) => void
     toggleFollowingProgress: (isFetching: boolean, userId: number) => void
     setPaginationStartEnd: (rerenderDirection: "left" | "right") => void
+    getUsers: (currentPage: number, pageSize: number) => void
 }
 
 
@@ -73,10 +108,8 @@ let mapStateToProps = (state: AppStateType): UserPageType => {
 export default connect<UserPageType, MapDispatchToProps, {}, AppStateType>(mapStateToProps, {
     follow,
     unfollow,
-    setUsers,
     setCurrentPage,
-    setTotalUsersCount,
-    toggleIsFetching,
     toggleFollowingProgress,
-    setPaginationStartEnd
-})(UsersAPIComponent)
+    setPaginationStartEnd,
+    getUsers
+})(UsersContainer)

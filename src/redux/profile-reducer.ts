@@ -1,3 +1,7 @@
+import {Dispatch} from "redux";
+import {followAPI, profileAPI} from "../api/api";
+import {toggleFollowingProgress, unfollowSuccess} from "./users-reducer";
+
 const ADD_POST = 'ADD-POST'
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT'
 const SET_USER_PROFILE = 'SET-USER-PROFILE'
@@ -84,4 +88,10 @@ export const setUserProfile = (profile: ProfileType) => {
     return {
         type: SET_USER_PROFILE, profile
     } as const
+}
+
+export const getUserProfile = (userId: string) => {
+    return (dispatch: Dispatch) => {
+        profileAPI.getProfileData(userId).then(data => dispatch(setUserProfile(data)))
+    }
 }
