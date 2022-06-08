@@ -8,7 +8,7 @@ import React from "react";
 
 
 export const Profile = (props: ProfilePropsType) => {
-    if (!props.isAuth) return <Redirect to={"/login"} />
+    // if (!props.isAuth) return <Redirect to={"/login"} />
     return <div className={s.content}>
         <ProfileInfo profile={props.profile}/>
         <MyPostsContainer />
